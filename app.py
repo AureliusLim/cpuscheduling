@@ -1,10 +1,15 @@
 from fcfs import FCFS
+from rr import RR
 
 class Process:
   def __init__(self, pid, arrivalTime, burstTime):
     self.pid = pid
     self.arrivalTime = arrivalTime
     self.burstTime = burstTime
+    self.startTime = None
+    self.endTime = None
+    self.waitingTime = 0
+    self.tempBurstTime = burstTime
 
 def main():
 #   The first line contains three integers separated by space, 𝑋 𝑌 𝑍.
@@ -28,6 +33,10 @@ def main():
   if x == 0:
     fcfs = FCFS(q)
     fcfs.start()
+  
+  if x == 3:
+    rr = RR(q, z)
+    rr.start()
 
 if __name__ == "__main__":
     main()
