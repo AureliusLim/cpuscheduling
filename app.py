@@ -6,8 +6,8 @@ class Process:
     self.pid = pid
     self.arrivalTime = arrivalTime
     self.burstTime = burstTime
-    self.startTime = None
-    self.endTime = None
+    self.startTime = []
+    self.endTime = []
     self.waitingTime = 0
     self.tempBurstTime = burstTime
 

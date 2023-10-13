@@ -28,10 +28,11 @@ class RR:
             #ongoing process gets added last to ready queue if arrival time of new process is equal to end time of ongoing process
             if(timeGiven == 0): 
                     #print(f'FINISHED ONGOING PROCESS: pId: {ongoingProcess.pid} Curr time: {self.time}')
+                    ongoingProcess.endTime.append(self.time)
+                    
                     if(int(ongoingProcess.tempBurstTime)>0):
                         self.readyQueue.append(ongoingProcess)
                     else:
-                        ongoingProcess.endTime = self.time
                         self.finishedProcesses.append(ongoingProcess)
                     ongoingProcess = None
             
@@ -39,8 +40,7 @@ class RR:
             if not ongoingProcess and self.readyQueue:
                 #assign ongoing process
                 ongoingProcess = self.readyQueue.pop(0)
-                if(ongoingProcess.startTime == None):
-                    ongoingProcess.startTime = self.time
+                ongoingProcess.startTime.append(self.time)
 
                 #print(f'NEW ONGOING PROCESS: pId: {ongoingProcess.pid} Curr time: {self.time}')
 
@@ -57,12 +57,17 @@ class RR:
         self.finishedProcesses.sort(key=lambda x:int(x.pid))
 
         for x in self.finishedProcesses:
-            x.waitingTime = int(x.endTime) - int(x.arrivalTime) - int(x.burstTime)
+            x.waitingTime = int(x.endTime[-1]) - int(x.arrivalTime) - int(x.burstTime)
 
     def printOutput(self):
+        waitingTimeSum = 0
         for x in self.finishedProcesses:
-            print(f'{x.pid} start time: {x.startTime} end time: {x.endTime} | Waiting time: {x.waitingTime}')
+            print(f'{x.pid}', end="")
+            for y,z in zip(x.startTime,x.endTime):
+                print(f' start time: {y} end time: {z} |', end="")
+            print(f' Waiting time: {x.waitingTime}')
+            waitingTimeSum += x.waitingTime 
 
-        waitingTimeAve = sum(x.waitingTime for x in self.finishedProcesses)/len(self.finishedProcesses)
+        waitingTimeAve = waitingTimeSum/len(self.finishedProcesses)
         
         print(f'Average waiting time: {waitingTimeAve}')
