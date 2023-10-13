@@ -34,7 +34,6 @@ class RR:
                         ongoingProcess.endTime = self.time
                         self.finishedProcesses.append(ongoingProcess)
                     ongoingProcess = None
-                    timeGiven = self.timeQuantum
             
             #if readyqueue is not empty and there isnt any ongoing processes
             if not ongoingProcess and self.readyQueue:
