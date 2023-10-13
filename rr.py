@@ -8,7 +8,7 @@ class RR:
     
 
     def start(self):
-        self.queue.sort(key=lambda x:x.arrivalTime)
+        self.queue.sort(key=lambda x:(int(x.arrivalTime), int(x.pid)))
         self.processStart()
         self.calculateWaitTime()
         self.printOutput()
@@ -19,11 +19,22 @@ class RR:
 
         #while there is a queue or process 
         while(self.queue or self.readyQueue or  ongoingProcess):
+            
             #if queue is not empty and processes in queue arrived, add to ready queue
-            if(self.queue and int(self.queue[0].arrivalTime) <= self.time):
-                while(self.queue and int(self.queue[0].arrivalTime) <= self.time):
-                    process = self.queue.pop(0)
-                    self.readyQueue.append(process)
+            while(self.queue and int(self.queue[0].arrivalTime) <= self.time):
+                process = self.queue.pop(0)
+                self.readyQueue.append(process)
+            
+            #ongoing process gets added last to ready queue if arrival time of new process is equal to end time of ongoing process
+            if(timeGiven == 0): 
+                    #print(f'FINISHED ONGOING PROCESS: pId: {ongoingProcess.pid} Curr time: {self.time}')
+                    if(int(ongoingProcess.tempBurstTime)>0):
+                        self.readyQueue.append(ongoingProcess)
+                    else:
+                        ongoingProcess.endTime = self.time
+                        self.finishedProcesses.append(ongoingProcess)
+                    ongoingProcess = None
+                    timeGiven = self.timeQuantum
             
             #if readyqueue is not empty and there isnt any ongoing processes
             if not ongoingProcess and self.readyQueue:
@@ -35,26 +46,16 @@ class RR:
                 #print(f'NEW ONGOING PROCESS: pId: {ongoingProcess.pid} Curr time: {self.time}')
 
                 timeGiven = min(self.timeQuantum, int(ongoingProcess.tempBurstTime))
+            
+            self.time += 1
 
-            #if there is an ongoing process
+            #if there is an ongoing process reduce time allocated
             if ongoingProcess:
-                self.time += 1
                 timeGiven -= 1
                 ongoingProcess.tempBurstTime = int(ongoingProcess.tempBurstTime)-1
-                if(timeGiven == 0): 
-                    #print(f'FINISHED ONGOING PROCESS: pId: {ongoingProcess.pid} Curr time: {self.time}')
-                    if(int(ongoingProcess.tempBurstTime)>0):
-                        self.readyQueue.append(ongoingProcess)
-                    else:
-                        ongoingProcess.endTime = self.time
-                        self.finishedProcesses.append(ongoingProcess)
-                    ongoingProcess = None
-                    timeGiven = self.timeQuantum
-            else:
-                self.time += 1
 
     def calculateWaitTime(self):
-        self.finishedProcesses.sort(key=lambda x:x.pid)
+        self.finishedProcesses.sort(key=lambda x:int(x.pid))
 
         for x in self.finishedProcesses:
             x.waitingTime = int(x.endTime) - int(x.arrivalTime) - int(x.burstTime)
