@@ -1,4 +1,5 @@
 from fcfs import FCFS
+from sjf import SJF
 from rr import RR
 
 class Process:
@@ -20,21 +21,24 @@ def main():
 # 𝑍 denotes a time quantum value (applicable for Round-Robin algorithm only), where 1 ≤ 𝑍 ≤ 100. 
 # If the CPU scheduling algorithm indicated by the value of 𝑋 is not the Round-Robin algorithm, this value must be set to 1 but ignored.
   q = []
-  x, y, z = input("Enter X, Y, Z: ").split()
+  x, y, z = input().split()
   x = int(x)
   y = int(y)
   z = int(z)
 # takes y number of processes
   for _ in range(y):
-    pid, arrivalTime, burstTime = input("Enter processes: ").split()
+    pid, arrivalTime, burstTime = input().split()
     process = Process(pid, arrivalTime, burstTime)
     q.append(process)
 
   if x == 0:
     fcfs = FCFS(q)
     fcfs.start()
+  elif x == 1:
+    sjf = SJF(q)
+    sjf.start()
   
-  if x == 3:
+  elif x == 3:
     rr = RR(q, z)
     rr.start()
 

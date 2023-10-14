@@ -17,16 +17,18 @@ class SJF:
     while self.queue or self.readyQueue or ongoingProcess:
       # check if there is a process in the initial queue and the shortest arrivaltime of the process in the queue is equal to the counter time
       # and append it to the ready queue
-      while self.queue and self.shortestArrivalTime == self.time:
+      # print(f'arrival time: {self.shortestArrivalTime()}')
+      while self.queue and self.shortestArrivalTime() == self.time:
         process, pidx = self.firstArrivedProcess()
         self.readyQueue.append(process)
-        self.queue.pop(pidx)
+        print(f'Queue: {self.queue.pop(pidx).__dict__}')
 
-      if processTime == 0:
+      if processTime == 0 and ongoingProcess:
       # end the process once its process time is up
       # add the end time of the process
-        ongoingProcess = None
         ongoingProcess.endTime.append(self.time)
+        print(f'Ongoing process: {ongoingProcess.__dict__}')
+        ongoingProcess = None
 
       # find the process that has the minimum burst time
       # check if the queue is not empty and no currently running processes
@@ -35,14 +37,18 @@ class SJF:
         # get the process that has the minimum burst time and assign it to ongoingProcess
         # add the start time of the process
         ongoingProcess, idx = self.minReadyProcess() 
-        self.readyQueue.pop(idx)
+        print(f'Ready Queue: {self.readyQueue.pop(idx).__dict__}')
         ongoingProcess.startTime.append(self.time)
 
+        processTime = int(ongoingProcess.burstTime)
+
       self.time += 1
+      print(f'counter: {self.time}')
 
       #if there is an ongoing process reduce time allocated
       if ongoingProcess:
-          timeGiven -= 1
+          processTime -= 1
+          print(f'process time: {processTime}')
         
 
   def calculateWaitTime(self):
@@ -68,8 +74,9 @@ class SJF:
     # returns the process that has the minimum burst time and its index
     minp = self.readyQueue[0]
     i = 0
+    idx = 0
     for p in self.readyQueue:
-      if p.burstTime < minp:
+      if int(p.burstTime) < int(minp.burstTime):
         minp = p
         idx = i
       i += 1
@@ -80,8 +87,9 @@ class SJF:
     # returns the process that has the shortest arrival time and its index
     minp = self.queue[0]
     i = 0
+    idx = 0
     for p in self.queue:
-      if p.arrivalTime < minp:
+      if int(p.arrivalTime) < int(minp.arrivalTime):
         minp = p
         idx = i
       i += 1
@@ -92,7 +100,7 @@ class SJF:
     # returns the shortest arrival time
     minp = self.queue[0]
     for p in self.queue:
-      if p.arrivalTime < minp:
+      if int(p.arrivalTime) < int(minp.arrivalTime):
         minp = p
     
-    return minp.arrivalTime
+    return int(minp.arrivalTime)
