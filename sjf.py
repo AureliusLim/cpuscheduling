@@ -6,10 +6,13 @@ class SJF:
     self.time = 0
 
   def start(self):
-    pass
+      self.processStart()
+      self.calculateWaitTime()
+      self.printOutput()
 
   def processStart(self):
     ongoingProcess = None
+    processTime = 0
     # check if there are any remaining or current processes
     while self.queue or self.readyQueue or ongoingProcess:
       # check if there is a process in the initial queue and the shortest arrivaltime of the process in the queue is equal to the counter time
@@ -18,8 +21,16 @@ class SJF:
         process, pidx = self.firstArrivedProcess()
         self.readyQueue.append(process)
         self.queue.pop(pidx)
+
+      if processTime == 0:
+      # end the process once its process time is up
+      # add the end time of the process
+        ongoingProcess = None
+        ongoingProcess.endTime.append(self.time)
+
       # find the process that has the minimum burst time
       # check if the queue is not empty and no currently running processes
+
       if self.readyQueue and not ongoingProcess:
         # get the process that has the minimum burst time and assign it to ongoingProcess
         # add the start time of the process
@@ -27,20 +38,31 @@ class SJF:
         self.readyQueue.pop(idx)
         ongoingProcess.startTime.append(self.time)
 
-      elif ongoingProcess:
-      # end the process once it is done processing
-      # add the end time of the process
-        ongoingProcess = None
-        ongoingProcess.endTime.append(self.time)
-
       self.time += 1
+
+      #if there is an ongoing process reduce time allocated
+      if ongoingProcess:
+          timeGiven -= 1
         
 
   def calculateWaitTime(self):
-    pass
-   
+      self.finishedProcesses.sort(key=lambda x:int(x.pid))
+
+      for x in self.finishedProcesses:
+          x.waitingTime = int(x.endTime[-1]) - int(x.arrivalTime) - int(x.burstTime)
+
   def printOutput(self):
-    pass  
+      waitingTimeSum = 0
+      for x in self.finishedProcesses:
+          print(f'{x.pid}', end="")
+          for y,z in zip(x.startTime,x.endTime):
+              print(f' start time: {y} end time: {z} |', end="")
+          print(f' Waiting time: {x.waitingTime}')
+          waitingTimeSum += x.waitingTime 
+
+      waitingTimeAve = waitingTimeSum/len(self.finishedProcesses)
+      
+      print(f'Average waiting time: {waitingTimeAve}')
   
   def minReadyProcess(self):
     # returns the process that has the minimum burst time and its index
