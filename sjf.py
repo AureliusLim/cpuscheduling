@@ -20,8 +20,16 @@ class SJF:
       # check if the queue is not empty and no currently running processes
       if self.readyQueue and not ongoingProcess:
         # get the process that has the minimum burst time and assign it to ongoingProcess
-        ongoingProcess = self.minReadyProcess() 
+        # add the start time of the process
+        ongoingProcess, idx = self.minReadyProcess() 
+        self.readyQueue.pop(idx)
+        ongoingProcess.startTime.append(self.time)
 
+      elif ongoingProcess:
+      # end the process
+      # add the end time of the process
+        ongoingProcess = None
+        ongoingProcess.endTime.append(self.time)
         
 
   def calculateWaitTime(self):
@@ -31,10 +39,13 @@ class SJF:
     pass  
   
   def minReadProcess(self):
-    # returns the process that has the minimum burst time
+    # returns the process that has the minimum burst time and its index
     minp = self.readyQueue[0]
+    i = 0
     for p in self.readyQueue:
       if p.burstTime < minp:
         minp = p
-
-    return minp
+        idx = i
+      i += 1
+    
+    return minp, idx
