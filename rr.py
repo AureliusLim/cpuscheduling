@@ -10,7 +10,7 @@ class RR:
     def start(self):
         self.queue.sort(key=lambda x:(int(x.arrivalTime), int(x.pid)))
         self.processStart()
-        self.calculateWaitTime()
+        #self.calculateWaitTime()
         self.printOutput()
 
     def processStart(self):
@@ -53,19 +53,26 @@ class RR:
                 timeGiven -= 1
                 ongoingProcess.tempBurstTime = int(ongoingProcess.tempBurstTime)-1
 
-    def calculateWaitTime(self):
-        self.finishedProcesses.sort(key=lambda x:int(x.pid))
+    # def calculateWaitTime(self):
+    #     self.finishedProcesses.sort(key=lambda x:int(x.pid))
 
-        for x in self.finishedProcesses:
-            x.waitingTime = int(x.endTime[-1]) - int(x.arrivalTime) - int(x.burstTime)
+    #     for x in self.finishedProcesses:
+    #         x.waitingTime = int(x.endTime[-1]) - int(x.arrivalTime) - int(x.burstTime)
 
     def printOutput(self):
+        self.finishedProcesses.sort(key=lambda x:int(x.pid))
         waitingTimeSum = 0
         for x in self.finishedProcesses:
-            print(f'{x.pid}', end="")
-            for y,z in zip(x.startTime,x.endTime):
+            for idx, (y,z) in enumerate(zip(x.startTime,x.endTime)):
+                print(f'{x.pid}', end="")
+                if idx == 0:
+                    prevEnd = x.arrivalTime
+                else:
+                    prevEnd = x.endTime[idx-1]
+                waitingTime = int(y) - int(prevEnd)
+                x.waitingTime += waitingTime
                 print(f' start time: {y} end time: {z} |', end="")
-            print(f' Waiting time: {x.waitingTime}')
+                print(f' Waiting time: {x.waitingTime}')
             waitingTimeSum += x.waitingTime 
 
         waitingTimeAve = waitingTimeSum/len(self.finishedProcesses)
