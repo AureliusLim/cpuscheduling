@@ -17,24 +17,22 @@ class SJF:
     while self.queue or self.readyQueue or ongoingProcess:
       # check if there is a process in the initial queue and the shortest arrivaltime of the process in the queue is equal to the counter time
       # and append it to the ready queue
-      # print(f'arrival time: {self.shortestArrivalTime()}')
-      for p in self.queue:
-        print(f'Starting Queue: {p.__dict__}')
-      for p in self.readyQueue:
-        print(f'Ready Queue: {p.__dict__}')
+      # for p in self.queue:
+      #   print(f'Starting Queue: {p.__dict__}')
+      # for p in self.readyQueue:
+      #   print(f'Ready Queue: {p.__dict__}')
       
 
       while self.queue and self.shortestArrivalTime() == self.time:
         process, pidx = self.firstArrivedProcess()
         self.readyQueue.append(process)
-        # print(f'Queue: {self.queue.pop(pidx).__dict__}')
         self.queue.pop(pidx)
 
       if processTime == 0 and ongoingProcess:
       # end the process once its process time is up
       # add the end time of the process
         ongoingProcess.endTime.append(self.time)
-        print(f'Ongoing process ended: {ongoingProcess.__dict__}')
+        # print(f'Ongoing process ended: {ongoingProcess.__dict__}')
         self.finishedProcesses.append(ongoingProcess)
         ongoingProcess = None
 
@@ -45,20 +43,17 @@ class SJF:
         # get the process that has the minimum burst time and assign it to ongoingProcess
         # add the start time of the process
         ongoingProcess, idx = self.minReadyProcess() 
-        # print(f'Ready Queue: {self.readyQueue.pop(idx).__dict__}')
         self.readyQueue.pop(idx)
         ongoingProcess.startTime.append(self.time)
 
         processTime = int(ongoingProcess.burstTime)
-        print(f'Ongoing process started: {ongoingProcess.__dict__}')
+        # print(f'Ongoing process started: {ongoingProcess.__dict__}')
 
       self.time += 1
-      print(f'counter: {self.time}')
 
       #if there is an ongoing process reduce time allocated
       if ongoingProcess:
           processTime -= 1
-          print(f'process time: {processTime}')
         
 
   def calculateWaitTime(self):
