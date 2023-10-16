@@ -1,5 +1,6 @@
 from fcfs import FCFS
 from sjf import SJF
+from srtf import SRTF
 from rr import RR
 
 class Process:
@@ -37,7 +38,9 @@ def main():
   elif x == 1:
     sjf = SJF(q)
     sjf.start()
-  
+  elif x == 2:
+    srtf = SRTF(q)
+    srtf.start()
   elif x == 3:
     rr = RR(q, z)
     rr.start()
