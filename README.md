@@ -35,7 +35,7 @@ Table 1. CPU Scheduling Algorithms and their corresponding value of 𝑋.
 • There will be 𝑌 lines of space-separated integers 𝐴 𝐵 𝐶 where 𝐴 is the process ID, 𝐵 is the arrival time, and 𝐶 is the burst time.
 
 ## Output
-The output of the program should include 𝑌 lines of processes with the process ID, start time, end time, and total waiting time where start time, end time, waiting time ≥ 0. If there are multiple start and end times for each process, display them in order. The output should be sorted according to the process ID. An additional last line at the end is the average waiting time of the processes. See the table with the sample input and output below.
+The output of the program should include 𝑌 lines of processes with the process ID, start time, end time, and total waiting time where start time, end time, waiting time ≥ 0. If there are multiple start and end times for each process, display them in order. The output should be sorted according to the process ID. An additional last line at the end is the average waiting time of the processes. 
 
 ### Sample input
 ```
