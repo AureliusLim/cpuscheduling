@@ -44,6 +44,8 @@ def main():
   elif x == 3:
     rr = RR(q, z)
     rr.start()
+  else:
+    print("Invalid input!")
 
 if __name__ == "__main__":
     main()
