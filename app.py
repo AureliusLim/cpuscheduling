@@ -1,3 +1,4 @@
+import sys
 from fcfs import FCFS
 from sjf import SJF
 from srtf import SRTF
@@ -13,6 +14,56 @@ class Process:
     self.waitingTime = 0
     self.tempBurstTime = burstTime
 
+#Return true if valid else false
+def checkValidInputs(input):
+  # Check if only 3 inputs per line
+  x = input.split()
+  if len(x) != 3:
+    return False
+  
+  # Check if integer input
+  try:
+    inputList = [int(y) for y in x]
+  except ValueError:
+    return False
+  
+  # Check for negative nonzero inputs
+  for i in inputList:
+    if i < 0:
+      return False
+
+  return True
+
+#Return true if valid else false
+def checkValidFirstLine(input):
+  x,y,z = input.split()
+  x,y,z = int(x),int(y),int(z)
+  
+  #check if algorithm id is between 0 and 3
+  if x < 0 or x > 3:
+    print("Invalid input: Invalid scheduling algorithm id")
+    return False
+  #check if number of processes is between 3 and 100
+  elif y < 3 or y > 100:
+    print("Invalid input: Number of processes should only be between 3 and 100 inclusively")
+    return False
+  #check if time quantum is between 1 and 100
+  elif z < 1 or z > 100:
+    print("Invalid input: Time quantum should only be between 1 and 100 inclusively")
+    return False
+  
+  return True
+
+# Return true if not duplicate id else false
+def checkDuplicateId(input, idList):
+  # Check inputted ID is not in id list (Checking for unique id)
+  id = input.split()[0]
+
+  if id in idList:
+    return False
+  
+  return True
+
 def main():
 #   The first line contains three integers separated by space, 𝑋 𝑌 𝑍.
 # 𝑋 denotes the CPU scheduling algorithm.
@@ -22,14 +73,36 @@ def main():
 # 𝑍 denotes a time quantum value (applicable for Round-Robin algorithm only), where 1 ≤ 𝑍 ≤ 100. 
 # If the CPU scheduling algorithm indicated by the value of 𝑋 is not the Round-Robin algorithm, this value must be set to 1 but ignored.
   q = []
-  x, y, z = input().split()
+  ids = []
+  tempInputs = input().strip()
+
+  while not checkValidInputs(tempInputs) or not checkValidFirstLine(tempInputs):
+      print("Invalid input!")
+      sys.stdin.flush()
+      tempInputs = input().strip()
+
+  x,y,z = tempInputs.split()
+
   x = int(x)
   y = int(y)
   z = int(z)
-# takes y number of processes
+
+  if x != 3:
+    z = 1
+# Takes y number of processes
   for _ in range(y):
-    pid, arrivalTime, burstTime = input().split()
+  
+    sys.stdin.flush()
+    tempInputs = input().strip()
+
+    while not checkValidInputs(tempInputs) or not checkDuplicateId(tempInputs, ids):
+      print("Invalid input!")
+      sys.stdin.flush()
+      tempInputs = input().strip()
+
+    pid, arrivalTime, burstTime = tempInputs.split()
     process = Process(pid, arrivalTime, burstTime)
+    ids.append(process.pid)
     q.append(process)
 
   if x == 0:
@@ -44,8 +117,6 @@ def main():
   elif x == 3:
     rr = RR(q, z)
     rr.start()
-  else:
-    print("Invalid input!")
 
 if __name__ == "__main__":
     main()
