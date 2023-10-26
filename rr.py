@@ -18,7 +18,7 @@ class RR:
         ongoingProcess = None
 
         #while there is a queue or process 
-        while(self.queue or self.readyQueue or  ongoingProcess):
+        while(self.queue or self.readyQueue or ongoingProcess):
             
             #if queue is not empty and processes in queue arrived, add to ready queue
             while(self.queue and int(self.queue[0].arrivalTime) <= self.time):
@@ -26,7 +26,7 @@ class RR:
                 self.readyQueue.append(process)
             
             #ongoing process gets added last to ready queue if arrival time of new process is equal to end time of ongoing process
-            if(timeGiven == 0): 
+            if(ongoingProcess and timeGiven == 0): 
                     #print(f'FINISHED ONGOING PROCESS: pId: {ongoingProcess.pid} Curr time: {self.time}')
                     ongoingProcess.endTime.append(self.time)
                     
