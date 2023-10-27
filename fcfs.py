@@ -15,6 +15,8 @@ class FCFS:
     self.queue.sort(key=lambda x:(int(x.arrivalTime), int(x.pid)))
 
     for process in range(0, len(self.queue)):
+      if(int(self.queue[process].arrivalTime) > self.timeCounter):
+         self.timeCounter += int(self.queue[process].arrivalTime)
       self.queue[process].startTime.append(self.timeCounter)
       self.timeCounter += int(self.queue[process].burstTime)
       self.queue[process].endTime.append(self.timeCounter)
@@ -27,6 +29,8 @@ class FCFS:
     self.averageWaiting = self.totalWaiting / len(self.queue)
 
   def printOutput(self):
+      self.queue.sort(key = lambda x:(int(x.pid), int(x.arrivalTime)))
+
       for x in self.queue:
           print(f'{x.pid}', end="")
           for y,z in zip(x.startTime,x.endTime):
