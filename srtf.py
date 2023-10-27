@@ -77,13 +77,14 @@ class SRTF:
           x.waitingTime = int(x.endTime[-1]) - int(x.arrivalTime) - int(x.burstTime)
 
   def printOutput(self):
+      self.finishedProcesses.sort(key=lambda x:int(x.pid))
       waitingTimeSum = 0
       for x in self.finishedProcesses:
-          print(f'{x.pid}', end="")
-          for y,z in zip(x.startTime,x.endTime):
-              print(f' start time: {y} end time: {z} |', end="")
-          print(f' Waiting time: {x.waitingTime}')
-          waitingTimeSum += x.waitingTime 
+        lastEndTime = x.arrivalTime
+        for y,z in zip(x.startTime,x.endTime):
+          print(f'{x.pid} start time: {y} end time: {z} | Waiting time: {y-int(lastEndTime)}')
+          lastEndTime = z
+        waitingTimeSum += x.waitingTime
 
       waitingTimeAve = waitingTimeSum/len(self.finishedProcesses)
       
