@@ -19,18 +19,26 @@ def checkValidInputs(input):
   # Check if only 3 inputs per line
   x = input.split()
   if len(x) != 3:
+    print("Invalid input: Only 3 inputs per line allowed")
     return False
   
   # Check if integer input
   try:
     inputList = [int(y) for y in x]
   except ValueError:
+    print("Invalid input: Noninteger input is not allowed")
     return False
   
   # Check for negative nonzero inputs
   for i in inputList:
     if i < 0:
+      print("Invalid input: Negative inputs is not allowed")
       return False
+    
+  # Check if last input is greater than 0
+  if inputList[-1] <= 0:
+    print("Invalid input: Burst time should be greater than 0")
+    return False 
 
   return True
 
@@ -60,6 +68,7 @@ def checkDuplicateId(input, idList):
   id = input.split()[0]
 
   if id in idList:
+    print("Invalid input: Duplicate Process ID is not allowed")
     return False
   
   return True
@@ -77,7 +86,6 @@ def main():
   tempInputs = input().strip()
 
   while not checkValidInputs(tempInputs) or not checkValidFirstLine(tempInputs):
-      print("Invalid input!")
       sys.stdin.flush()
       tempInputs = input().strip()
 
@@ -96,7 +104,6 @@ def main():
     tempInputs = input().strip()
 
     while not checkValidInputs(tempInputs) or not checkDuplicateId(tempInputs, ids):
-      print("Invalid input!")
       sys.stdin.flush()
       tempInputs = input().strip()
 
